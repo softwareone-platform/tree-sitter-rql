@@ -4,7 +4,7 @@ endif
 
 LANGUAGE_NAME := tree-sitter-rql
 HOMEPAGE_URL := https://github.com/tree-sitter/tree-sitter-rql
-VERSION := 0.23.6
+VERSION := 0.1.0
 
 # repository
 SRC_DIR := src
@@ -13,6 +13,7 @@ TS ?= tree-sitter
 
 # install directory layout
 PREFIX ?= /usr/local
+DATADIR ?= $(PREFIX)/share
 INCLUDEDIR ?= $(PREFIX)/include
 LIBDIR ?= $(PREFIX)/lib
 PCLIBDIR ?= $(LIBDIR)/pkgconfig
@@ -57,17 +58,26 @@ ifneq ($(STRIP),)
 	$(STRIP) $@
 endif
 
+$(LANGUAGE_NAME).pc: bindings/c/$(LANGUAGE_NAME).pc.in
+	sed -e 's|@PROJECT_VERSION@|$(VERSION)|' \
+		-e 's|@CMAKE_INSTALL_LIBDIR@|$(LIBDIR:$(PREFIX)/%=%)|' \
+		-e 's|@CMAKE_INSTALL_INCLUDEDIR@|$(INCLUDEDIR:$(PREFIX)/%=%)|' \
+		-e 's|@PROJECT_DESCRIPTION@|$(DESCRIPTION)|' \
+		-e 's|@PROJECT_HOMEPAGE_URL@|$(HOMEPAGE_URL)|' \
+		-e 's|@CMAKE_INSTALL_PREFIX@|$(PREFIX)|' $< > $@
+
 $(PARSER): $(SRC_DIR)/grammar.json
 	$(TS) generate $^
 
 install: all
-	install -d '$(DESTDIR)$(INCLUDEDIR)'/tree_sitter '$(DESTDIR)$(PCLIBDIR)' '$(DESTDIR)$(LIBDIR)'
-	install -m644 bindings/c/$(LANGUAGE_NAME).h '$(DESTDIR)$(INCLUDEDIR)'/tree_sitter/$(LANGUAGE_NAME).h
+	install -d '$(DESTDIR)$(DATADIR)'/tree-sitter/queries/rql '$(DESTDIR)$(INCLUDEDIR)'/tree_sitter '$(DESTDIR)$(PCLIBDIR)' '$(DESTDIR)$(LIBDIR)'
+	install -m644 bindings/c/tree_sitter/$(LANGUAGE_NAME).h '$(DESTDIR)$(INCLUDEDIR)'/tree_sitter/$(LANGUAGE_NAME).h
 	install -m644 $(LANGUAGE_NAME).pc '$(DESTDIR)$(PCLIBDIR)'/$(LANGUAGE_NAME).pc
 	install -m644 lib$(LANGUAGE_NAME).a '$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).a
 	install -m755 lib$(LANGUAGE_NAME).$(SOEXT) '$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).$(SOEXTVER)
 	ln -sf lib$(LANGUAGE_NAME).$(SOEXTVER) '$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).$(SOEXTVER_MAJOR)
 	ln -sf lib$(LANGUAGE_NAME).$(SOEXTVER_MAJOR) '$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).$(SOEXT)
+	install -m644 queries/*.scm '$(DESTDIR)$(DATADIR)'/tree-sitter/queries/rql
 
 uninstall:
 	$(RM) '$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).a \
@@ -76,6 +86,7 @@ uninstall:
 		'$(DESTDIR)$(LIBDIR)'/lib$(LANGUAGE_NAME).$(SOEXT) \
 		'$(DESTDIR)$(INCLUDEDIR)'/tree_sitter/$(LANGUAGE_NAME).h \
 		'$(DESTDIR)$(PCLIBDIR)'/$(LANGUAGE_NAME).pc
+	$(RM) -r '$(DESTDIR)$(DATADIR)'/tree-sitter/queries/rql
 
 clean:
 	$(RM) $(OBJS) $(LANGUAGE_NAME).pc lib$(LANGUAGE_NAME).a lib$(LANGUAGE_NAME).$(SOEXT)

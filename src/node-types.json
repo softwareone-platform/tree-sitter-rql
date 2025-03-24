@@ -206,6 +206,10 @@
         {
           "type": "UNQUOTED_VAL",
           "named": true
+        },
+        {
+          "type": "UUID",
+          "named": true
         }
       ]
     }
@@ -402,6 +406,10 @@
   },
   {
     "type": "UNQUOTED_VAL",
+    "named": true
+  },
+  {
+    "type": "UUID",
     "named": true
   },
   {
