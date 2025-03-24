@@ -408,6 +408,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "UUID"
+        },
+        {
+          "type": "SYMBOL",
           "name": "FLOAT"
         },
         {
@@ -460,6 +464,10 @@
     "DATE": {
       "type": "PATTERN",
       "value": "\\d{4}-\\d{2}-\\d{2}"
+    },
+    "UUID": {
+      "type": "PATTERN",
+      "value": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
     },
     "FLOAT": {
       "type": "PATTERN",

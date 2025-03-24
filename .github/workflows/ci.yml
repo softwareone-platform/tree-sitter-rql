@@ -46,6 +46,6 @@ jobs:
         uses: tree-sitter/parse-action@v4
         with:
           files: |
-            examples/**/*.rql
+            examples/test_parsing.rql
           invalid-files: |
-            examples/cpython/Lib/test/tokenizedata/badsyntax_3131.py
+            examples/invalid_syntax.rql

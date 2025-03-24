@@ -1,0 +1,1 @@
+AND(eq(name,value),or(any(prop,and(ne(field,value), lt(pro2,11))),gte(hello,1,ilike(a,*ss*)))

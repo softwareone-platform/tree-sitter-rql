@@ -4,7 +4,8 @@
 (comparison_operator) @operator
 (SIGN) @operator
 
-;; Boolean and constants
+;; Boolean, uuid and constants
+(UUID) @constant.builtin
 (BOOLEAN) @constant.builtin
 (NULL_LITERAL) @constant.builtin
 (EMPTY_LITERAL) @constant.builtin
