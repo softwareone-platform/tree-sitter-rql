@@ -95,19 +95,6 @@ jobs:
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{matrix.qemu_arch}}
-      - name: Set up tree-sitter CLI
-        uses: tree-sitter/setup-action/cli@v2
-      - name: Install dependencies
-        run: npm i --ignore-scripts --omit dev --omit peer --omit optional
-      - name: Regenerate parser
-        shell: bash
-        run: |
-          while read -r grammar; do
-            grammar_dir=$(dirname "$grammar")
-            cd "$grammar_dir"
-            tree-sitter generate
-            cd - > /dev/null
-          done < <(find . -name grammar.js -not -path './node_modules/*' -not -path './.build/*')
       - name: Download updated pyproject.toml
         uses: actions/download-artifact@v4
         with:
